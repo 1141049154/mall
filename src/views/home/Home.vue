@@ -1,0 +1,155 @@
+<template>
+  <div id="home">
+  <nav-bar class="nav-home"><template v-slot:center><div>购物街</div></template></nav-bar> 
+  <home-swiper :banners=banners></home-swiper>
+  <recommend-views :recommends=recommends></recommend-views>
+  <feature-view></feature-view>
+  <tab-control :titles="['流行','新款','精选']" class="tab" @itemClick="itemClick"></tab-control>
+  <goods-list :goods="showtype" />
+
+   <ul>
+    <li>1liebie</li>
+    <li>2liebie</li>
+    <li>3liebie</li>
+    <li>4liebie</li>
+    <li>5liebie</li>
+    <li>6liebie</li>
+    <li>7liebie</li>
+    <li>8liebie</li>
+    <li>9liebie</li>
+    <li>1liebie</li>
+    <li>2liebie</li>
+    <li>3liebie</li>
+    <li>4liebie</li>
+    <li>5liebie</li>
+    <li>6liebie</li>
+    <li>7liebie</li>
+    <li>8liebie</li>
+    <li>9liebie</li><li>1liebie</li>
+    <li>2liebie</li>
+    <li>3liebie</li>
+    <li>4liebie</li>
+    <li>5liebie</li>
+    <li>6liebie</li>
+    <li>7liebie</li>
+    <li>8liebie</li>
+    <li>9liebie</li>
+    <li>1liebie</li>
+    <li>2liebie</li>
+    <li>3liebie</li>
+    <li>4liebie</li>
+    <li>5liebie</li>
+    <li>6liebie</li>
+    <li>7liebie</li>
+    <li>8liebie</li>
+    <li>9liebie</li>
+    <li>1liebie</li>
+    <li>2liebie</li>
+    <li>3liebie</li>
+    <li>4liebie</li>
+    <li>5liebie</li>
+    <li>6liebie</li>
+    <li>7liebie</li>
+    <li>8liebie</li>
+    <li>9liebie</li>
+  </ul> -->
+  </div>
+</template>
+
+<script>
+import NavBar from "../../components/common/navbar/NavBar.vue";
+
+import HomeSwiper from './childComps/HomeSwiper';
+import RecommendViews from './childComps/RecommendViews';
+import FeatureView from './childComps/FeatureView';
+import TabControl from '../../components/common/tabcontrol/TabControl.vue';
+import GoodsList from '../../components/common/goods/GoodsList.vue'
+
+import {getHomeMultidata,getHomegoods} from "../../network/Home";
+
+
+
+
+export default {
+  name: 'Home',
+  components: {
+    NavBar,
+
+    HomeSwiper,
+    RecommendViews,
+    FeatureView,
+    TabControl,
+
+    GoodsList
+
+    
+  },
+  data(){
+    return{
+      banners:[],
+      recommends:[],
+      goods:{
+        'pop':{page:0,list:[]},
+        'new':{page:0,list:[]},
+        'sell':{page:0,list:[]},
+      },
+      currentitem:'pop'
+    }
+  },
+  computed:{
+    showtype(){
+      return this.goods[this.currentitem].list
+    }
+  },
+  created(){
+    this.getHomeMultidata();
+    this.getHomegoods('pop')
+    this.getHomegoods('new')
+    this.getHomegoods('sell')
+  },
+  methods:{
+    itemClick(index){
+    switch(index){
+      case 0:this.currentitem = 'pop';break;
+      case 1:this.currentitem = 'new';break;
+      case 2:this.currentitem = 'sell';break;
+    }
+    },
+
+    //
+    getHomeMultidata(){
+        getHomeMultidata().then( res => {
+      this.banners = res.data.banner.list;
+      this.recommends = res.data.recommend.list;
+    })
+    },
+    getHomegoods(type){
+      const page = this.goods[type].page + 1
+      getHomegoods(type,page).then(res => {
+           this.goods[type].list.push(...res.data.list)
+           this.goods[type].page += 1
+      })
+    }
+  }
+}
+</script>
+<style >
+#home{
+  padding-top: 44px;
+}
+.nav-home{
+  background-color:#FF8E96;
+  color:#fff;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 9;
+  }
+  .tab{
+    position: sticky;
+    top: 44px;
+    z-index: 9;
+  }
+
+</style>
