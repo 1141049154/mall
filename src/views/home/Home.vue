@@ -1,58 +1,15 @@
 <template>
   <div id="home">
   <nav-bar class="nav-home"><template v-slot:center><div>购物街</div></template></nav-bar> 
-  <home-swiper :banners=banners></home-swiper>
+  <scroll class="content" :pullupload="true" ref="scroll" :probetype="3" @scroll="backscroll" @pullingUp="loadmore">
+     <home-swiper :banners=banners></home-swiper>
   <recommend-views :recommends=recommends></recommend-views>
   <feature-view></feature-view>
   <tab-control :titles="['流行','新款','精选']" class="tab" @itemClick="itemClick"></tab-control>
-  <goods-list :goods="showtype" />
+  <goods-list :goods="showtype" /> 
+  </scroll>
+  <back-top @click.native="backClick" v-show="isbackshow"></back-top>
 
-   <ul>
-    <li>1liebie</li>
-    <li>2liebie</li>
-    <li>3liebie</li>
-    <li>4liebie</li>
-    <li>5liebie</li>
-    <li>6liebie</li>
-    <li>7liebie</li>
-    <li>8liebie</li>
-    <li>9liebie</li>
-    <li>1liebie</li>
-    <li>2liebie</li>
-    <li>3liebie</li>
-    <li>4liebie</li>
-    <li>5liebie</li>
-    <li>6liebie</li>
-    <li>7liebie</li>
-    <li>8liebie</li>
-    <li>9liebie</li><li>1liebie</li>
-    <li>2liebie</li>
-    <li>3liebie</li>
-    <li>4liebie</li>
-    <li>5liebie</li>
-    <li>6liebie</li>
-    <li>7liebie</li>
-    <li>8liebie</li>
-    <li>9liebie</li>
-    <li>1liebie</li>
-    <li>2liebie</li>
-    <li>3liebie</li>
-    <li>4liebie</li>
-    <li>5liebie</li>
-    <li>6liebie</li>
-    <li>7liebie</li>
-    <li>8liebie</li>
-    <li>9liebie</li>
-    <li>1liebie</li>
-    <li>2liebie</li>
-    <li>3liebie</li>
-    <li>4liebie</li>
-    <li>5liebie</li>
-    <li>6liebie</li>
-    <li>7liebie</li>
-    <li>8liebie</li>
-    <li>9liebie</li>
-  </ul> -->
   </div>
 </template>
 
@@ -63,9 +20,12 @@ import HomeSwiper from './childComps/HomeSwiper';
 import RecommendViews from './childComps/RecommendViews';
 import FeatureView from './childComps/FeatureView';
 import TabControl from '../../components/common/tabcontrol/TabControl.vue';
-import GoodsList from '../../components/common/goods/GoodsList.vue'
+import GoodsList from '../../components/common/goods/GoodsList.vue';
+import Scroll from '../../components/common/scroll/Scroll.vue';
 
 import {getHomeMultidata,getHomegoods} from "../../network/Home";
+
+import BackTop from '../../components/context/backtop/BackTop.vue'
 
 
 
@@ -80,7 +40,9 @@ export default {
     FeatureView,
     TabControl,
 
-    GoodsList
+    GoodsList,
+    Scroll,
+    BackTop
 
     
   },
@@ -93,7 +55,8 @@ export default {
         'new':{page:0,list:[]},
         'sell':{page:0,list:[]},
       },
-      currentitem:'pop'
+      currentitem:'pop',
+      isbackshow:false,
     }
   },
   computed:{
@@ -128,14 +91,28 @@ export default {
       getHomegoods(type,page).then(res => {
            this.goods[type].list.push(...res.data.list)
            this.goods[type].page += 1
+           this.$refs.scroll.scroll.finishPullUp()
       })
+    },
+    backClick(){
+           this.$refs.scroll.scroll.scrollTo(0,0,1000);
+          
+    },
+    backscroll(position){     
+        this.isbackshow = (-position.y)>1000    
+    },
+    loadmore(){
+      this.getHomegoods(this.currentitem);
+      this.$refs.scroll.scroll.refresh()
     }
   }
 }
 </script>
-<style >
+<style scoped>
 #home{
   padding-top: 44px;
+  height:100vh; 
+  position: relative;
 }
 .nav-home{
   background-color:#FF8E96;
@@ -151,5 +128,16 @@ export default {
     top: 44px;
     z-index: 9;
   }
+  .content{
+    /* height:calc(100%-93);  */
+     height: 100%;
+     overflow: hidden;
+     position:absolute;
+     top: 44px;
+     bottom: 49px;
+     left: 0;
+     right: 0;
+  }
+ 
 
 </style>
