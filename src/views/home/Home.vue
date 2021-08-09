@@ -1,11 +1,12 @@
 <template>
   <div id="home">
   <nav-bar class="nav-home"><template v-slot:center><div>购物街</div></template></nav-bar> 
+  <tab-control :titles="['流行','新款','精选']" v-show="isfixed" class="one-tab" ref="tabcontrolone" @itemClick="itemClick" :class="{fixed:isfixed}"/>
   <scroll class="content" :pullupload="true" ref="scroll" :probetype="3" @scroll="backscroll" @pullingUp="loadmore">
-     <home-swiper :banners=banners></home-swiper>
-  <recommend-views :recommends=recommends></recommend-views>
+     <home-swiper :banners=banners @swiperimgload="swiperimgload"></home-swiper>
+  <recommend-views :recommends=recommends  ></recommend-views>
   <feature-view></feature-view>
-  <tab-control :titles="['流行','新款','精选']" class="tab" @itemClick="itemClick"></tab-control>
+  <tab-control :titles="['流行','新款','精选']"  ref="tabcontroltwo" @itemClick="itemClick" :class="{fixed:isfixed}"></tab-control>
   <goods-list :goods="showtype" /> 
   </scroll>
   <back-top @click.native="backClick" v-show="isbackshow"></back-top>
@@ -57,8 +58,11 @@ export default {
       },
       currentitem:'pop',
       isbackshow:false,
+      tabcontroltop:0,
+      isfixed:false
     }
   },
+  
   computed:{
     showtype(){
       return this.goods[this.currentitem].list
@@ -77,7 +81,10 @@ export default {
       case 1:this.currentitem = 'new';break;
       case 2:this.currentitem = 'sell';break;
     }
+    this.$refs.tabcontrolone.currentindex = index;
+     this.$refs.tabcontroltwo.currentindex = index;
     },
+    
 
     //
     getHomeMultidata(){
@@ -99,7 +106,12 @@ export default {
           
     },
     backscroll(position){     
-        this.isbackshow = (-position.y)>1000    
+        this.isbackshow = (-position.y)>1000;
+        this.isfixed = (-position.y) > this.tabcontroltop  
+    },
+    swiperimgload(){
+      this.tabcontroltop = this.$refs.tabcontroltwo.$el.offsetTop;
+      console.log(this.$refs.tabcontroltwo.$el.offsetTop);
     },
     loadmore(){
       this.getHomegoods(this.currentitem);
@@ -123,11 +135,7 @@ export default {
   top: 0;
   z-index: 9;
   }
-  .tab{
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-  }
+
   .content{
     /* height:calc(100%-93);  */
      height: 100%;
@@ -137,6 +145,10 @@ export default {
      bottom: 49px;
      left: 0;
      right: 0;
+  }
+  .one-tab{
+    position: relative;
+    z-index: 9;
   }
  
 
