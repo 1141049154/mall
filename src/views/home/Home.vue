@@ -59,7 +59,8 @@ export default {
       currentitem:'pop',
       isbackshow:false,
       tabcontroltop:0,
-      isfixed:false
+      isfixed:false,
+      saveY:0,
     }
   },
   
@@ -73,6 +74,13 @@ export default {
     this.getHomegoods('pop')
     this.getHomegoods('new')
     this.getHomegoods('sell')
+  },
+  activated(){
+   this.$refs.scroll.scroll.scrollTo(0,this.saveY)
+   this.$refs.scroll.scroll.refresh()
+  },
+  deactivated(){
+  this.saveY = this.$refs.scroll.scroll.getScrollY
   },
   methods:{
     itemClick(index){
@@ -111,7 +119,7 @@ export default {
     },
     swiperimgload(){
       this.tabcontroltop = this.$refs.tabcontroltwo.$el.offsetTop;
-      console.log(this.$refs.tabcontroltwo.$el.offsetTop);
+      
     },
     loadmore(){
       this.getHomegoods(this.currentitem);
