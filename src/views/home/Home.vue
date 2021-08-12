@@ -141,9 +141,13 @@ export default {
   right: 0;
   left: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; 
   }
-
+.nav-home div{
+  text-align: center;
+  margin-top:9px;
+  font-size:20px;
+}
   .content{
     /* height:calc(100%-93);  */
      height: 100%;
