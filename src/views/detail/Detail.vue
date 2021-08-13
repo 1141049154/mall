@@ -11,8 +11,9 @@
      <goods-list :goods="recommendInfo" ref="recommend" ></goods-list>    
    </scroll>
    
-   <detail-bot-bar></detail-bot-bar>
+   <detail-bot-bar  @addTocart="addTocart"></detail-bot-bar>
    <back-top @click.native="backClick" v-show="isbackshow" class="back"></back-top>
+  
   </div>
 </template>
 
@@ -135,6 +136,19 @@ export default {
     backClick(){
       this.$refs.scroll.scroll.scrollTo(0,0,1000);
       
+    },
+    addTocart(){
+      
+      const goodscatinfo = {}
+        goodscatinfo.price = this.goods.realPrice;
+        goodscatinfo.image = this.topimage[0];
+				goodscatinfo.title = this.goods.title;
+				goodscatinfo.desc = this.goods.desc;	
+				goodscatinfo.iid = this.iid;
+        //将商品信息传入到vuex中
+        this.$store.dispatch("cart",goodscatinfo)
+
+
     }
   }
 }

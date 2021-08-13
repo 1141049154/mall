@@ -12,7 +12,7 @@
 			<div><img src="../../../assets/img/detail/icon03.png" alt=""></div>
 			<div>收藏</div>
 		</div>
-		<div class="btn  cart-btn">加入购购物车</div>
+		<div class="btn  cart-btn" @click="addTocart">加入购购物车</div>
 		<div class="btn  buy-btn">购买</div>
 	</div>
 </template>
@@ -23,7 +23,12 @@
 export default {
   name: 'DetailBotBar',
   components: {
-  
+   
+  },
+  methods: {
+	   addTocart(){
+		this.$emit('addTocart')
+	}
   }
 }
 </script>
