@@ -13,7 +13,7 @@
    
    <detail-bot-bar  @addTocart="addTocart"></detail-bot-bar>
    <back-top @click.native="backClick" v-show="isbackshow" class="back"></back-top>
-  
+   <toast class="toast" :message="message" :show="show"></toast>
   </div>
 </template>
 
@@ -30,7 +30,8 @@ import DetailParamInfo from "./childComps/DetailParamInfo.vue";
 import DetailCommentInfo from "./childComps/DetailCommentInfo.vue";
 import GoodsList from "../../components/common/goods/GoodsList.vue";
 import DetailBotBar from "./childComps/DetailBotBar.vue";
-import BackTop from '../../components/context/backtop/BackTop.vue'
+import BackTop from '../../components/context/backtop/BackTop.vue';
+import Toast from "../../components/common/toast/Toast.vue"
 
 export default {
   name: 'Detail',
@@ -45,6 +46,7 @@ export default {
   GoodsList,
   DetailBotBar,
   BackTop,
+  Toast,
   Scroll 
   },
   data(){
@@ -59,6 +61,8 @@ export default {
       recommendInfo:[],
       detailThemeTop:[],
       isbackshow:false,
+      message:'',
+      show:false
     }
   },
   created(){
@@ -146,7 +150,14 @@ export default {
 				goodscatinfo.desc = this.goods.desc;	
 				goodscatinfo.iid = this.iid;
         //将商品信息传入到vuex中
-        this.$store.dispatch("cart",goodscatinfo)
+        this.$store.dispatch("cart",goodscatinfo).then((res) =>{
+             this.message = res
+             this.show = true;
+             setTimeout(() =>{
+              this.show = false;
+              this.message = ''
+             },1500)
+        })
 
 
     }
@@ -168,6 +179,16 @@ export default {
   position: relative;
   z-index: 9;
   background-color: #fff;
+}
+.toast{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.75);
+  padding: 8px 10px;
+  color:#fff;
+  
 }
 
 

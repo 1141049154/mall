@@ -1,6 +1,6 @@
 <template>
 <div class="cart-bot-bar">
- <div><input type="checkbox" class="check-bot" :checked="ischeck"   id="check">&ensp;<label for="check"> 全部</label> </div>
+ <div><input type="checkbox" class="check-bot" :checked="ischeck"  @click="itemall" id="check">&ensp;<label for="check"> 全部</label> </div>
 		<div>合计：{{totalPrice}}</div>
 		<div>去结算{{checkLength}}</div>
  </div>
@@ -14,13 +14,26 @@ export default {
   components: {
   
   },
+  methods:{
+      itemall(){
+          if(this.ischeck){
+            this.$store.state.cartlist.forEach(element => {
+               element.checked = false;                
+            });
+          }else{
+              this.$store.state.cartlist.forEach(element => {
+               element.checked = true;                
+            });
+          }
+      }
+  },
   computed:{
       totalPrice(){
           return '￥' + this.$store.state.cartlist.filter(item => {
               return item.checked
           }).reduce((preValue, item) => {
               return preValue + item.price * item.count;
-          },0)
+          },0).toFixed(2)
           
       },
       checkLength(){
