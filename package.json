@@ -10,6 +10,7 @@
   "dependencies": {
     "better-scroll": "^2.4.2",
     "core-js": "^3.6.5",
+    "element-ui": "^2.4.5",
     "fastclick": "^1.0.6",
     "less-loader": "^10.0.1",
     "normalize.css": "^8.0.1",
@@ -23,6 +24,9 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0"
+    "@vue/compiler-sfc": "^3.0.0",
+    "node-sass": "^4.9.2",
+    "sass-loader": "^7.0.3",
+    "vue-cli-plugin-element": "~1.0.1"
   }
 }

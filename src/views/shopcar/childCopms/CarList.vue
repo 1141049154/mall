@@ -1,12 +1,7 @@
 <template>
   <div class="cart-list-wrap">
     <car-list-item :cartList="cartList"></car-list-item>
-    <ul>
-        <li>mihao</li>
-        <li>mihao</li>
-        <li>mihao</li>
-        
-    </ul>
+    
     
   </div>
 </template>
